@@ -4,10 +4,25 @@ const app = express();
 const PORT = process.env.PORT;
 const MONGOOSE_PASSWORD = process.env.MONGOOSE_PASSWORD;
 const mongoose = require("mongoose");
+const UserModel = require("./models/Users");
 
-mongoose.connect(
-  `mongodb+srv://fitness:${MONGOOSE_PASSWORD}@cluster0.5stz6q1.mongodb.net/?retryWrites=true&w=majority`
-);
+mongoose
+  .connect(
+    `mongodb+srv://fitness:${MONGOOSE_PASSWORD}@cluster0.5stz6q1.mongodb.net/?retryWrites=true&w=majority`
+  )
+  .then(() => {
+    console.log("connected to db");
+  });
+
+app.get("/getUsers", (req, res) => {
+  UserModel.find({})
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
 
 app.listen(PORT, () => {
   console.log(`Server runs on port - ${PORT}`);
