@@ -6,6 +6,8 @@ const MONGOOSE_PASSWORD = process.env.MONGOOSE_PASSWORD;
 const mongoose = require("mongoose");
 const UserModel = require("./models/Users");
 
+app.use(express.json());
+
 mongoose
   .connect(
     `mongodb+srv://fitness:${MONGOOSE_PASSWORD}@cluster0.5stz6q1.mongodb.net/?retryWrites=true&w=majority`
@@ -22,6 +24,14 @@ app.get("/getUsers", (req, res) => {
     .catch((err) => {
       res.json(err);
     });
+});
+
+app.post("/createUser", async (req, res) => {
+  const user = req.body;
+  const newUser = new UserModel(user);
+  await newUser.save();
+
+  res.json(user);
 });
 
 app.listen(PORT, () => {
